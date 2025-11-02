@@ -13,37 +13,49 @@
     <DockPanel>
         <Button Content="保存" DockPanel.Dock="Bottom" Height="40" Margin="5"
                 Command="{Binding SaveCommand}" />
-        <ScrollViewer VerticalScrollBarVisibility="Auto">
-            <ItemsControl ItemsSource="{Binding Parameters}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate DataType="{x:Type vm:ParameterViewModel}">
-                        <Border BorderBrush="Gray" BorderThickness="0,0,0,1" Padding="5">
-                            <!-- Grid にして横並び、列幅を規定 -->
-                            <Grid VerticalAlignment="Center" Margin="0">
-                                <Grid.ColumnDefinitions>
-                                    <!-- ラベル幅は内容に合わせる -->
-                                    <ColumnDefinition Width="300"/>
-                                    <!-- コントロール領域は残りを占有。必要に応じて "2*" や固定幅に調整 -->
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
+        <TabControl ItemsSource="{Binding Groups}">
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding GroupName}"/>
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+            <TabControl.ContentTemplate>
+                <DataTemplate>
 
-                                <TextBlock Grid.Column="0"
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <ItemsControl ItemsSource="{Binding Parameters}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="{x:Type vm:ParameterViewModel}">
+                                    <Border BorderBrush="Gray" BorderThickness="0,0,0,1" Padding="5">
+                                        <!-- Grid にして横並び、列幅を規定 -->
+                                        <Grid VerticalAlignment="Center" Margin="0">
+                                            <Grid.ColumnDefinitions>
+                                                <!-- ラベル幅は内容に合わせる -->
+                                                <ColumnDefinition Width="300"/>
+                                                <!-- コントロール領域は残りを占有。必要に応じて "2*" や固定幅に調整 -->
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <TextBlock Grid.Column="0"
                                            Text="{Binding View}"
                                            FontWeight="Bold"
                                            VerticalAlignment="Center"
                                            HorizontalAlignment="Left"
                                            Margin="0,0,8,0"/>
 
-                                <ContentControl Grid.Column="1"
+                                            <ContentControl Grid.Column="1"
                                                 Content="{Binding}"
                                                 ContentTemplateSelector="{StaticResource ParameterTemplateSelector}"
                                                 VerticalAlignment="Center"
                                                 HorizontalAlignment="Left"/>
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </DataTemplate>
+            </TabControl.ContentTemplate>
+        </TabControl>
     </DockPanel>
 </Window>

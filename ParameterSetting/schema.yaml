@@ -1,19 +1,23 @@
 ﻿parameters:
   - name: "MaxSpeed"
+    group: "Motion"
     type: "float"
     range: [0.0, 5.0]
     unit: "m/s"
     description: "最大速度"
 
   - name: "OperationMode"
+    group: "Motion"
     type: "enum"
     values: ["AUTO", "MANUAL", "TEST"]
     description: "動作モード"
 
   - name: "EnableLogging"
+    group: "System"
     type: "bool"
     description: "ログ出力を有効にする"
 
   - name: "IPAddress"
+    group: "Network"
     type: "ip"
     description: "接続先デバイスのIPアドレス"
