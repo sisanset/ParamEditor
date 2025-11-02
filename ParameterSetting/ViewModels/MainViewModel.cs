@@ -2,6 +2,8 @@
 using System.Windows.Input;
 using System.IO;
 using YamlDotNet.Serialization.NamingConventions;
+using ParamEditor.Models;
+using System.Xml.Schema;
 
 namespace ParamEditor.ViewModels
 {
@@ -9,11 +11,21 @@ namespace ParamEditor.ViewModels
     {
         public ObservableCollection<ParameterViewModel> Parameters { get; } = new();
         public ICommand SaveCommand { get; }
+        private readonly string schemaPath = "schema.yaml";
+        private readonly string dataPath = "data.yaml";
+
+
         public MainViewModel()
         {
-            var schema = Models.SchemaLoader.Load("schema.yaml");
+            var schema = SchemaLoader.Load(schemaPath);
+            var values = ParameterValueLoader.LoadValues(dataPath);
             foreach (var def in schema.Parameters)
-                Parameters.Add(new ParameterViewModel(def));
+            {
+                var vm = new ParameterViewModel(def);
+                if (values.TryGetValue(def.Name, out var val))
+                    vm.Value = val;
+                Parameters.Add(vm);
+            }
             SaveCommand = new RelayCommand(Save);
         }
 
@@ -26,7 +38,7 @@ namespace ParamEditor.ViewModels
                 .WithNamingConvention(CamelCaseNamingConvention.Instance)
                 .Build();
             var yaml = serializer.Serialize(dict);
-            File.WriteAllText("data.yaml", yaml);
+            File.WriteAllText(dataPath, yaml);
         }
 
 

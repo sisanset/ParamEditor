@@ -39,6 +39,7 @@ namespace ParamEditor.ViewModels
         public ParameterViewModel(ParameterDefinition def)
         {
             Definition = def;
+            Validate();
         }
 
         private void Validate()
@@ -53,15 +54,18 @@ namespace ParamEditor.ViewModels
             {
                 case "int":
                 case "float":
-                    if (!double.TryParse(Value, out double v)) { IsValid = false; return; }
-                    if (Definition.Range != null &&
-                        (v < Definition.Range[0] || v > Definition.Range[1])) { IsValid = false; return; }
+                    if (!double.TryParse(Value, out double v))
+                    { IsValid = false; return; }
+                    if (Definition.Range != null && (v < Definition.Range[0] || v > Definition.Range[1]))
+                    { IsValid = false; return; }
                     break;
                 case "bool":
-                    if (Value != "true" && Value != "false") { IsValid = false; return; }
+                    if (Value != "true" && Value != "false")
+                    { IsValid = false; return; }
                     break;
                 case "enum":
-                    if (Definition.Values == null || !Definition.Values.Contains(Value)) { IsValid = false; return; }
+                    if (Definition.Values == null || !Definition.Values.Contains(Value))
+                    { IsValid = false; return; }
                     break;
                 case "ip":
                     string pattern = @"^((25[0-5]|2[0-4][0-9]|[01]?[0-9]{1,2})\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9]{1,2})$";
