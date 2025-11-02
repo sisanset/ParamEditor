@@ -3,9 +3,6 @@ using System.Windows.Input;
 using System.IO;
 using YamlDotNet.Serialization.NamingConventions;
 using ParamEditor.Models;
-using System.Xml.Schema;
-using System.Windows.Controls;
-using System.Text.RegularExpressions;
 
 namespace ParamEditor.ViewModels
 {

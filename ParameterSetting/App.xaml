@@ -3,9 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:ParamEditor"
              xmlns:vm="clr-namespace:ParamEditor.ViewModels"
+             xmlns:conv="clr-namespace:ParamEditor.Converters"
              StartupUri="Views/MainWindow.xaml">
     <Application.Resources>
-        <vm:BoolToBrushConverter x:Key="BoolToBrushConverter"/>
+        <conv:BoolToBrushConverter x:Key="BoolToBrushConverter"/>
+        <conv:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+
         <!-- 数値／文字列 -->
         <DataTemplate x:Key="TextTemplate" DataType="{x:Type vm:ParameterViewModel}">
             <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}"
