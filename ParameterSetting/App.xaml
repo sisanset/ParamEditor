@@ -2,8 +2,32 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:ParamEditor"
-             StartupUri="MainWindow.xaml">
+             xmlns:vm="clr-namespace:ParamEditor.ViewModels"
+             StartupUri="Views/MainWindow.xaml">
     <Application.Resources>
-         
+        <vm:BoolToBrushConverter x:Key="BoolToBrushConverter"/>
+        <!-- 数値／文字列 -->
+        <DataTemplate x:Key="TextTemplate" DataType="{x:Type vm:ParameterViewModel}">
+            <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}"
+                     Background="{Binding IsValid, Converter={StaticResource BoolToBrushConverter}}"
+                     Width="200"/>
+        </DataTemplate>
+
+        <!-- bool -->
+        <DataTemplate x:Key="BoolTemplate" DataType="{x:Type vm:ParameterViewModel}">
+            <CheckBox IsChecked="{Binding Value, Mode=TwoWay}" Content="{Binding Name}"/>
+        </DataTemplate>
+
+        <!-- enum -->
+        <DataTemplate x:Key="EnumTemplate" DataType="{x:Type vm:ParameterViewModel}">
+            <ComboBox ItemsSource="{Binding Definition.Values}" 
+                      SelectedItem="{Binding Value}" Width="200"/>
+        </DataTemplate>
+
+        <!-- 型に応じてテンプレート切替 -->
+        <vm:ParameterTemplateSelector x:Key="ParameterTemplateSelector"
+                                      TextTemplate="{StaticResource TextTemplate}"
+                                      BoolTemplate="{StaticResource BoolTemplate}"
+                                      EnumTemplate="{StaticResource EnumTemplate}"/>
     </Application.Resources>
 </Application>
