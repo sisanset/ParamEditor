@@ -76,6 +76,11 @@ namespace ParamEditor.ViewModels
             switch (Definition.Type)
             {
                 case "int":
+                    if (!int.TryParse(Value, out int i))
+                    { IsValid = false; return; }
+                    if (Definition.Range != null && (i < Definition.Range[0] || i > Definition.Range[1]))
+                    { IsValid = false; return; }
+                    break;
                 case "float":
                     if (!double.TryParse(Value, out double v))
                     { IsValid = false; return; }
@@ -83,7 +88,7 @@ namespace ParamEditor.ViewModels
                     { IsValid = false; return; }
                     break;
                 case "bool":
-                    if (Value != "true" && Value != "false")
+                    if (Value.ToLower() != "true" && Value.ToLower() != "false")
                     { IsValid = false; return; }
                     break;
                 case "enum":

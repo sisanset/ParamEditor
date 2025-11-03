@@ -4,6 +4,7 @@ using System.IO;
 using YamlDotNet.Serialization.NamingConventions;
 using ParamEditor.Models;
 using ParamEditor.Themes;
+using System.Windows;
 
 namespace ParamEditor.ViewModels
 {
@@ -47,6 +48,14 @@ namespace ParamEditor.ViewModels
 
         private void Save(object? _)
         {
+            var invalids=Groups.SelectMany(g=>g.Parameters).Where(p => !p.IsValid).ToList();
+            if (invalids.Any())
+            {
+                var msg = "以下のパラメータの値が不正です。修正してください。\n" +
+                    string.Join("\n", invalids.Select(p => $"- {p.Name}: {p.Value}"));
+                MessageBox.Show(msg, "保存できません", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
             var dict = new Dictionary<string, string?>();
             foreach (var g in Groups)
             {
