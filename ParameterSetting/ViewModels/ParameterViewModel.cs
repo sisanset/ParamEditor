@@ -36,6 +36,23 @@ namespace ParamEditor.ViewModels
                 OnPropertyChanged();
             }
         }
+        public string ToolTipText
+        {
+            get
+            {
+                var text = Description ?? string.Empty;
+                if (Type == "int" || Type == "float")
+                {
+                    var range = string.Empty;
+                    if (Definition.Range?.Length == 2)
+                    {
+                        range = $"許容範囲:{Definition.Range[0]}-{Definition.Range[1]}";
+                    }
+                    text = string.IsNullOrEmpty(text) ? range : $"{text}\n{range}";
+                }
+                return text;
+            }
+        }
         public ParameterViewModel(ParameterDefinition def)
         {
             Definition = def;

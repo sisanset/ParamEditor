@@ -17,5 +17,11 @@
     <SolidColorBrush x:Key="TextBrush" Color="{StaticResource TextColor}" />
     <SolidColorBrush x:Key="BoolTrueBrush" Color="White"/>
     <SolidColorBrush x:Key="BoolFalseBrush" Color="#7B2E2E"/>
+    <Style TargetType="ToolTip">
+        <Setter Property="Background" Value="#FFFFFBE6"/>
+        <Setter Property="Foreground" Value="#222"/>
+        <Setter Property="BorderBrush" Value="#DDD"/>
+        <Setter Property="BorderThickness" Value="1"/>
+    </Style>
 
 </ResourceDictionary>

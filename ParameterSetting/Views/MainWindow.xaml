@@ -253,7 +253,7 @@
                                     <DataTemplate DataType="{x:Type vm:ParameterViewModel}">
                                         <Border Style="{DynamicResource ParameterCardStyle}">
                                             <!-- Grid にして横並び、列幅を規定 -->
-                                            <Grid VerticalAlignment="Center" Margin="0">
+                                            <Grid VerticalAlignment="Center" Margin="0" >
                                                 <Grid.ColumnDefinitions>
                                                     <!-- ラベル幅は内容に合わせる -->
                                                     <ColumnDefinition Width="300"/>
@@ -262,7 +262,7 @@
                                                     <ColumnDefinition Width="*"/>
                                                 </Grid.ColumnDefinitions>
 
-                                                <TextBlock Grid.Column="0"
+                                                <TextBlock Grid.Column="0" ToolTip="{Binding ToolTipText}"
                                                        Text="{Binding View}"
                                                        FontWeight="SemiBold"
                                                        VerticalAlignment="Center"

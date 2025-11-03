@@ -23,13 +23,15 @@
 
             <!-- bool -->
             <DataTemplate x:Key="BoolTemplate" DataType="{x:Type vm:ParameterViewModel}">
-                <CheckBox IsChecked="{Binding Value, Mode=TwoWay}" Content="{Binding Name}"/>
+                <CheckBox IsChecked="{Binding Value, Mode=TwoWay}" 
+                          Content="{Binding Name}"/>
             </DataTemplate>
 
             <!-- enum -->
             <DataTemplate x:Key="EnumTemplate" DataType="{x:Type vm:ParameterViewModel}">
                 <ComboBox ItemsSource="{Binding Definition.Values}" 
-                          SelectedItem="{Binding Value}" Width="200"/>
+                          SelectedItem="{Binding Value}" 
+                          Width="200"/>
             </DataTemplate>
 
             <!-- 型に応じてテンプレート切替 -->
