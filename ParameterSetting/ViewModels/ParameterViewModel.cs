@@ -15,6 +15,7 @@ namespace ParamEditor.ViewModels
         public string Description => Definition.Description;
         public string View => $"{Name}({Description})";
         public string? Unit => Definition.Unit;
+        public int? DecimalPlaces => Definition.Decimalplaces;
         public string? Value
         {
             get => _value; set
@@ -47,6 +48,10 @@ namespace ParamEditor.ViewModels
                     if (Definition.Range?.Length == 2)
                     {
                         range = $"許容範囲:{Definition.Range[0]}-{Definition.Range[1]}";
+                    }
+                    if(Type=="float" && DecimalPlaces.HasValue)
+                    {
+                        range += (range.Length > 0 ? "\n" : "") + $"小数点以下桁数:{DecimalPlaces.Value}";
                     }
                     text = string.IsNullOrEmpty(text) ? range : $"{text}\n{range}";
                 }
@@ -102,6 +107,13 @@ namespace ParamEditor.ViewModels
             }
 
             IsValid = true;
+        }
+        public void NormalizeDecimal()
+        {
+            if(Type=="float" && DecimalPlaces.HasValue && double.TryParse(Value, out double v))
+            {
+                Value = Math.Round(v, DecimalPlaces.Value).ToString();
+            }
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

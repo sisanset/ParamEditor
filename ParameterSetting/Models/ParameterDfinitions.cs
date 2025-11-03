@@ -10,6 +10,7 @@ namespace ParamEditor.Models
         public double[]? Range { get; set; }
         public List<string>? Values { get; set; }
         public string? Unit { get; set; }
+        public int? Decimalplaces { get; set; }
     }
 
     public class SchemaRoot

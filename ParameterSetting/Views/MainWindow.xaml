@@ -269,8 +269,10 @@
                                                        HorizontalAlignment="Left"
                                                        Margin="0,0,0,4"/>
                                                 <ContentControl Grid.Column="1"
-                                                            Content="{Binding}"
-                                                            ContentTemplateSelector="{DynamicResource ParameterTemplateSelector}"/>
+                                                                Content="{Binding}"
+                                                                ContentTemplateSelector="{DynamicResource ParameterTemplateSelector}"
+                                                                PreviewTextInput="NumericTextBox_PreviewTextInput"
+                                                                LostFocus="NumericTextBox_LostFocus"/>
                                                 <TextBlock Grid.Column="2"
                                                        Text="{Binding Definition.Unit}"
                                                        Foreground="#777"
