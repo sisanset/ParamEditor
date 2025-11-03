@@ -37,7 +37,7 @@
             <Setter Property="Padding" Value="10,6"/>
             <Setter Property="Margin" Value="10"/>
             <Setter Property="BorderBrush" Value="#0078D4"/>
-            
+
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template">
                 <Setter.Value>
@@ -59,6 +59,70 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style x:Key="FlatTabControl" TargetType="TabControl">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabControl">
+                        <DockPanel>
+                            <TabPanel DockPanel.Dock="Top"
+                                      IsItemsHost="True"
+                                      Background="Transparent"
+                                      Margin="0,0,0,4"
+                                      Panel.ZIndex="1"
+                                      />
+                            <Border Background="White"
+                                    CornerRadius="8"
+                                    BorderThickness="1"
+                                    BorderBrush="#ddd"
+                                    Padding="10">
+                                <ContentPresenter ContentSource="SelectedContent"/>
+                            </Border>
+                        </DockPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="TabItem">
+            <Setter Property="Margin" Value="4,0"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#444"/>
+            <Setter Property="BorderThickness" Value="0,0,0,3"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Border x:Name="TabBorder"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter x:Name="ContentSite"
+                                              ContentSource="Header"
+                                              VerticalAlignment="Center"
+                                              HorizontalAlignment="Center"
+                                              Margin="10,2"/>
+                        </Border>
+                        
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="TabBorder" Property="Background" Value="#f2f4f8"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="TabBorder" Property="BorderBrush" Value="#0078D4"/>
+                                <Setter TargetName="TabBorder" Property="Background" Value="#eef5ff"/>
+                                <Setter Property="Foreground" Value="#0078D4"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            
+        </Style>
     </Window.Resources>
     <Window.DataContext>
         <vm:MainViewModel/>
@@ -75,7 +139,8 @@
                     Background="Transparent" 
                     BorderThickness="0" 
                     Padding="10" 
-                    Margin="10">
+                    Margin="10"
+                    Style="{StaticResource FlatTabControl}">
             <TabControl.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding GroupName}" 
@@ -86,7 +151,6 @@
             </TabControl.ItemTemplate>
             <TabControl.ContentTemplate>
                 <DataTemplate>
-
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                         <ItemsControl ItemsSource="{Binding Parameters}">
                             <ItemsControl.ItemTemplate>
@@ -99,7 +163,7 @@
                                                 <ColumnDefinition Width="300"/>
                                                 <!-- コントロール領域は残りを占有。必要に応じて "2*" や固定幅に調整 -->
                                                 <ColumnDefinition Width="Auto"/>
-                                                <ColumnDefinition Width="*"/> 
+                                                <ColumnDefinition Width="*"/>
                                             </Grid.ColumnDefinitions>
 
                                             <TextBlock Grid.Column="0"
