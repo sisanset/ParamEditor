@@ -6,31 +6,37 @@
              xmlns:conv="clr-namespace:ParamEditor.Converters"
              StartupUri="Views/MainWindow.xaml">
     <Application.Resources>
-        <conv:BoolToBrushConverter x:Key="BoolToBrushConverter"/>
-        <conv:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Themes/DarkTheme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
 
-        <!-- 数値／文字列 -->
-        <DataTemplate x:Key="TextTemplate" DataType="{x:Type vm:ParameterViewModel}">
-            <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}"
-                     Background="{Binding IsValid, Converter={StaticResource BoolToBrushConverter}}"
-                     Width="200"/>
-        </DataTemplate>
+            <conv:BoolToBrushConverter x:Key="BoolToBrushConverter"/>
+            <conv:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
 
-        <!-- bool -->
-        <DataTemplate x:Key="BoolTemplate" DataType="{x:Type vm:ParameterViewModel}">
-            <CheckBox IsChecked="{Binding Value, Mode=TwoWay}" Content="{Binding Name}"/>
-        </DataTemplate>
+            <!-- 数値／文字列 -->
+            <DataTemplate x:Key="TextTemplate" DataType="{x:Type vm:ParameterViewModel}">
+                <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}"
+                         Background="{Binding IsValid, Converter={StaticResource BoolToBrushConverter}}"
+                         Width="200"/>
+            </DataTemplate>
 
-        <!-- enum -->
-        <DataTemplate x:Key="EnumTemplate" DataType="{x:Type vm:ParameterViewModel}">
-            <ComboBox ItemsSource="{Binding Definition.Values}" 
-                      SelectedItem="{Binding Value}" Width="200"/>
-        </DataTemplate>
+            <!-- bool -->
+            <DataTemplate x:Key="BoolTemplate" DataType="{x:Type vm:ParameterViewModel}">
+                <CheckBox IsChecked="{Binding Value, Mode=TwoWay}" Content="{Binding Name}"/>
+            </DataTemplate>
 
-        <!-- 型に応じてテンプレート切替 -->
-        <vm:ParameterTemplateSelector x:Key="ParameterTemplateSelector"
-                                      TextTemplate="{StaticResource TextTemplate}"
-                                      BoolTemplate="{StaticResource BoolTemplate}"
-                                      EnumTemplate="{StaticResource EnumTemplate}"/>
+            <!-- enum -->
+            <DataTemplate x:Key="EnumTemplate" DataType="{x:Type vm:ParameterViewModel}">
+                <ComboBox ItemsSource="{Binding Definition.Values}" 
+                          SelectedItem="{Binding Value}" Width="200"/>
+            </DataTemplate>
+
+            <!-- 型に応じてテンプレート切替 -->
+            <vm:ParameterTemplateSelector x:Key="ParameterTemplateSelector"
+                                          TextTemplate="{StaticResource TextTemplate}"
+                                          BoolTemplate="{StaticResource BoolTemplate}"
+                                          EnumTemplate="{StaticResource EnumTemplate}"/>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

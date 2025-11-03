@@ -3,6 +3,7 @@ using System.Windows.Input;
 using System.IO;
 using YamlDotNet.Serialization.NamingConventions;
 using ParamEditor.Models;
+using ParamEditor.Themes;
 
 namespace ParamEditor.ViewModels
 {
@@ -16,6 +17,16 @@ namespace ParamEditor.ViewModels
 
         public MainViewModel()
         {
+            ThemeManager.ThemeChanged += (_, _) =>
+            {
+              foreach(var group in Groups)
+                {
+                    foreach(var param in group.Parameters)
+                    {
+                        param.RefreshValidation();
+                    }
+                }
+            };
             var schema = SchemaLoader.Load(schemaPath);
             var values = ParameterValueLoader.LoadValues(dataPath);
             var grouped = schema.Parameters.GroupBy(p => p.Group);

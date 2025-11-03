@@ -7,10 +7,90 @@
         xmlns:vm="clr-namespace:ParamEditor.ViewModels"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
-        Background="#f7f9fc"
-        FontFamily="Segoe UI"
-        >
+        Background="{DynamicResource PanelBackground}"
+        FontFamily="Segoe UI">
     <Window.Resources>
+        <!-- === 共通スタイル === -->
+        <Style TargetType="Window">
+            <Setter Property="Background" Value="{DynamicResource WindowBackground}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+            <Setter Property="FontFamily" Value="Segoe UI" />
+            <Setter Property="FontSize" Value="14" />
+        </Style>
+
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+            <Setter Property="Margin" Value="4" />
+        </Style>
+
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="{DynamicResource ControlBackground}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ControlBorder}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="4,2" />
+            <Setter Property="Margin" Value="2" />
+            <Setter Property="CaretBrush" Value="{DynamicResource AccentBrush}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="3">
+                            <ScrollViewer Margin="0"
+                                      x:Name="PART_ContentHost" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}" />
+                </Trigger>
+                <Trigger Property="IsFocused" Value="True">
+                    <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="CheckBox">
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+            <Setter Property="Margin" Value="4,2" />
+        </Style>
+
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="{DynamicResource ControlBackground}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource ControlBorder}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="8,4" />
+            <Setter Property="Margin" Value="4" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            CornerRadius="4">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource HoverBackground}" />
+                                <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource AccentBrush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
         <Style x:Key="ParameterCardStyle" TargetType="Border">
             <Setter Property="CornerRadius" Value="8"/>
             <Setter Property="Background" Value="White"/>
@@ -59,123 +139,139 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <!-- TabControlスタイル -->
         <Style x:Key="FlatTabControl" TargetType="TabControl">
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Background" Value="{DynamicResource PanelBackground}" />
+            <Setter Property="BorderThickness" Value="0" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TabControl">
-                        <DockPanel>
-                            <TabPanel DockPanel.Dock="Top"
-                                      IsItemsHost="True"
-                                      Background="Transparent"
-                                      Margin="0,0,0,4"
-                                      Panel.ZIndex="1"
-                                      />
-                            <Border Background="White"
-                                    CornerRadius="8"
-                                    BorderThickness="1"
-                                    BorderBrush="#ddd"
-                                    Padding="10">
-                                <ContentPresenter ContentSource="SelectedContent"/>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <!-- タブヘッダー -->
+                            <TabPanel Grid.Row="0"
+                                  Background="{DynamicResource PanelBackground}"
+                                  Margin="0,0,0,4"
+                                  IsItemsHost="True"
+                                  HorizontalAlignment="Left" />
+
+                            <!-- コンテンツ -->
+                            <Border Grid.Row="1"
+                                Background="{DynamicResource ControlBackground}"
+                                CornerRadius="8"
+                                Padding="10">
+                                <ContentPresenter ContentSource="SelectedContent" />
                             </Border>
-                        </DockPanel>
+                        </Grid>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
+        <!-- TabItemのスタイル -->
         <Style TargetType="TabItem">
-            <Setter Property="Margin" Value="4,0"/>
-            <Setter Property="Padding" Value="12,6"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="#444"/>
-            <Setter Property="BorderThickness" Value="0,0,0,3"/>
-            <Setter Property="BorderBrush" Value="Transparent"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            
+            <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+            <Setter Property="Background" Value="{DynamicResource PanelBackground}" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="Margin" Value="4,0" />
+            <Setter Property="Padding" Value="12,6" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Cursor" Value="Hand" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TabItem">
                         <Border x:Name="TabBorder"
-                                Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}">
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="0,0,0,3">
                             <ContentPresenter x:Name="ContentSite"
-                                              ContentSource="Header"
-                                              VerticalAlignment="Center"
-                                              HorizontalAlignment="Center"
-                                              Margin="10,2"/>
+                                          ContentSource="Header"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          Margin="10,2" />
                         </Border>
-                        
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="TabBorder" Property="Background" Value="#f2f4f8"/>
+                                <Setter TargetName="TabBorder" Property="Background" Value="{DynamicResource HoverBackground}" />
                             </Trigger>
                             <Trigger Property="IsSelected" Value="True">
-                                <Setter TargetName="TabBorder" Property="BorderBrush" Value="#0078D4"/>
-                                <Setter TargetName="TabBorder" Property="Background" Value="#eef5ff"/>
-                                <Setter Property="Foreground" Value="#0078D4"/>
+                                <Setter TargetName="TabBorder" Property="Background" Value="{DynamicResource ControlBackground}" />
+                                <Setter TargetName="TabBorder" Property="BorderBrush" Value="{DynamicResource AccentBrush}" />
+                                <Setter Property="Foreground" Value="{DynamicResource AccentBrush}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-            
         </Style>
     </Window.Resources>
     <Window.DataContext>
         <vm:MainViewModel/>
     </Window.DataContext>
-    <DockPanel>
-        <Border DockPanel.Dock="Bottom" Background="#f0f2f5" Padding="8" BorderThickness="1,1,0,0" BorderBrush="#ccc">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Content="保存" Width="100" Height="40" Margin="5"
-                        Style="{StaticResource PrimaryButton}"
-                        Command="{Binding SaveCommand}" />
+    <Grid Background="{DynamicResource WindowBackground}">
+        <DockPanel Background="{DynamicResource PanelBackground}">
+            <StackPanel DockPanel.Dock="Top"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right"
+                        Background="{DynamicResource PanelBackground}">
+                <Button x:Name="ThemeToggleButton"
+                        Width="32" Height="32"
+                        FontSize="16"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Click="ThemeToggleButton_Click"/>
             </StackPanel>
-        </Border>
-        <TabControl ItemsSource="{Binding Groups}" 
+            <Border DockPanel.Dock="Bottom" Padding="8" BorderThickness="1,1,0,0" BorderBrush="#ccc">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="保存" Width="100" Height="40" Margin="5"
+                        Style="{DynamicResource PrimaryButton}"
+                        Command="{Binding SaveCommand}" />
+                </StackPanel>
+            </Border>
+            <TabControl ItemsSource="{Binding Groups}" 
                     Background="Transparent" 
                     BorderThickness="0" 
                     Padding="10" 
                     Margin="10"
-                    Style="{StaticResource FlatTabControl}">
-            <TabControl.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding GroupName}" 
+                    Style="{DynamicResource FlatTabControl}">
+                <TabControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding GroupName}" 
                                FontWeight="SemiBold" 
                                FontSize="14" 
                                Margin="8,4"/>
-                </DataTemplate>
-            </TabControl.ItemTemplate>
-            <TabControl.ContentTemplate>
-                <DataTemplate>
-                    <ScrollViewer VerticalScrollBarVisibility="Auto">
-                        <ItemsControl ItemsSource="{Binding Parameters}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate DataType="{x:Type vm:ParameterViewModel}">
-                                    <Border Style="{StaticResource ParameterCardStyle}">
-                                        <!-- Grid にして横並び、列幅を規定 -->
-                                        <Grid VerticalAlignment="Center" Margin="0">
-                                            <Grid.ColumnDefinitions>
-                                                <!-- ラベル幅は内容に合わせる -->
-                                                <ColumnDefinition Width="300"/>
-                                                <!-- コントロール領域は残りを占有。必要に応じて "2*" や固定幅に調整 -->
-                                                <ColumnDefinition Width="Auto"/>
-                                                <ColumnDefinition Width="*"/>
-                                            </Grid.ColumnDefinitions>
+                    </DataTemplate>
+                </TabControl.ItemTemplate>
+                <TabControl.ContentTemplate>
+                    <DataTemplate>
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <ItemsControl ItemsSource="{Binding Parameters}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate DataType="{x:Type vm:ParameterViewModel}">
+                                        <Border Style="{DynamicResource ParameterCardStyle}">
+                                            <!-- Grid にして横並び、列幅を規定 -->
+                                            <Grid VerticalAlignment="Center" Margin="0">
+                                                <Grid.ColumnDefinitions>
+                                                    <!-- ラベル幅は内容に合わせる -->
+                                                    <ColumnDefinition Width="300"/>
+                                                    <!-- コントロール領域は残りを占有。必要に応じて "2*" や固定幅に調整 -->
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
 
-                                            <TextBlock Grid.Column="0"
+                                                <TextBlock Grid.Column="0"
                                                        Text="{Binding View}"
                                                        FontWeight="SemiBold"
                                                        VerticalAlignment="Center"
                                                        HorizontalAlignment="Left"
                                                        Margin="0,0,0,4"/>
-                                            <ContentControl Grid.Column="1"
+                                                <ContentControl Grid.Column="1"
                                                             Content="{Binding}"
-                                                            ContentTemplateSelector="{StaticResource ParameterTemplateSelector}"/>
-                                            <TextBlock Grid.Column="2"
+                                                            ContentTemplateSelector="{DynamicResource ParameterTemplateSelector}"/>
+                                                <TextBlock Grid.Column="2"
                                                        Text="{Binding Definition.Unit}"
                                                        Foreground="#777"
                                                        FontSize="11"
@@ -183,14 +279,15 @@
                                                        Visibility="{Binding Definition.Unit, Converter={StaticResource NullToVisibilityConverter}}"
                                                        VerticalAlignment="Center"
                                                        HorizontalAlignment="Left"/>
-                                        </Grid>
-                                    </Border>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </ScrollViewer>
-                </DataTemplate>
-            </TabControl.ContentTemplate>
-        </TabControl>
-    </DockPanel>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </DataTemplate>
+                </TabControl.ContentTemplate>
+            </TabControl>
+        </DockPanel>
+    </Grid>
 </Window>

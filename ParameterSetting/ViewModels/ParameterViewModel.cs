@@ -41,6 +41,12 @@ namespace ParamEditor.ViewModels
             Definition = def;
             Validate();
         }
+        public void RefreshValidation()
+        {
+            Validate();
+            OnPropertyChanged(nameof(Value));
+            OnPropertyChanged(nameof(IsValid));
+        }
 
         private void Validate()
         {

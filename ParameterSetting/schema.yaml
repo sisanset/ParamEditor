@@ -6,6 +6,13 @@
     unit: "m/s"
     description: "最大速度"
 
+  - name: "MinSpeed"
+    group: "Motion"
+    type: "int"
+    range: [0, 5]
+    unit: "m/s"
+    description: "最大速度"
+
   - name: "OperationMode"
     group: "Motion"
     type: "enum"
