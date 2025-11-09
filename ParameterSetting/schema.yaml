@@ -25,7 +25,7 @@
     type: "bool"
     description: "ログ出力を有効にする"
 
-  - name: "IPAddress"
+  - name: "Network/IPAddress"
     group: "Network"
     type: "ip"
     description: "接続先デバイスのIPアドレス"

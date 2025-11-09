@@ -1,1 +1,6 @@
-﻿
+﻿MaxSpeed: 3.12
+MinSpeed: 2
+OperationMode: TEST
+EnableLogging: True
+Network:
+  IPAddress: 123.133.233.122

@@ -20,16 +20,16 @@ namespace ParamEditor.ViewModels
         {
             ThemeManager.ThemeChanged += (_, _) =>
             {
-              foreach(var group in Groups)
+                foreach (var group in Groups)
                 {
-                    foreach(var param in group.Parameters)
+                    foreach (var param in group.Parameters)
                     {
                         param.RefreshValidation();
                     }
                 }
             };
             var schema = SchemaLoader.Load(schemaPath);
-            var values = ParameterValueLoader.LoadValues(dataPath);
+            var values = ParameterValueLoader.LoadParameters(dataPath, schema);
             var grouped = schema.Parameters.GroupBy(p => p.Group);
             foreach (var group in grouped)
             {
@@ -48,7 +48,7 @@ namespace ParamEditor.ViewModels
 
         private void Save(object? _)
         {
-            var invalids=Groups.SelectMany(g=>g.Parameters).Where(p => !p.IsValid).ToList();
+            var invalids = Groups.SelectMany(g => g.Parameters).Where(p => !p.IsValid).ToList();
             if (invalids.Any())
             {
                 var msg = "以下のパラメータの値が不正です。修正してください。\n" +
@@ -56,17 +56,16 @@ namespace ParamEditor.ViewModels
                 MessageBox.Show(msg, "保存できません", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
+            //ParameterValueLoader.SaveParameters(dataPath, Groups
+            //    .SelectMany(g => g.Parameters)
+            //    .ToDictionary(p => p.Name, p => p.Value));
             var dict = new Dictionary<string, string?>();
             foreach (var g in Groups)
             {
                 foreach (var p in g.Parameters)
                     dict[p.Name] = p.Value;
             }
-            var serializer = new YamlDotNet.Serialization.SerializerBuilder()
-                .WithNamingConvention(CamelCaseNamingConvention.Instance)
-                .Build();
-            var yaml = serializer.Serialize(dict);
-            File.WriteAllText(dataPath, yaml);
+            ParameterValueLoader.SaveParameters(dataPath, dict);
         }
 
 

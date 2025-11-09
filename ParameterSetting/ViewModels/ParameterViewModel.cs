@@ -18,7 +18,8 @@ namespace ParamEditor.ViewModels
         public int? DecimalPlaces => Definition.Decimalplaces;
         public string? Value
         {
-            get => _value; set
+            get => _value;
+            set
             {
                 if (_value != value)
                 {
@@ -49,7 +50,7 @@ namespace ParamEditor.ViewModels
                     {
                         range = $"許容範囲:{Definition.Range[0]}-{Definition.Range[1]}";
                     }
-                    if(Type=="float" && DecimalPlaces.HasValue)
+                    if (Type == "float" && DecimalPlaces.HasValue)
                     {
                         range += (range.Length > 0 ? "\n" : "") + $"小数点以下桁数:{DecimalPlaces.Value}";
                     }
@@ -61,6 +62,7 @@ namespace ParamEditor.ViewModels
         public ParameterViewModel(ParameterDefinition def)
         {
             Definition = def;
+            //Value = Definition.Default;
             Validate();
         }
         public void RefreshValidation()
@@ -110,7 +112,7 @@ namespace ParamEditor.ViewModels
         }
         public void NormalizeDecimal()
         {
-            if(Type=="float" && DecimalPlaces.HasValue && double.TryParse(Value, out double v))
+            if (Type == "float" && DecimalPlaces.HasValue && double.TryParse(Value, out double v))
             {
                 Value = Math.Round(v, DecimalPlaces.Value).ToString();
             }
