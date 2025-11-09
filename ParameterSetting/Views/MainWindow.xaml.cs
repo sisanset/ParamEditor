@@ -11,7 +11,7 @@ namespace ParamEditor.Views
     /// </summary>
     public partial class MainWindow : Window
     {
-        public string ThemeIcon => ThemeManager.IsDarkTheme ? "☀" : "🌙";
+        public static string ThemeIcon => ThemeManager.IsDarkTheme ? "☀" : "🌙";
 
         public MainWindow()
         {
@@ -56,6 +56,11 @@ namespace ParamEditor.Views
             {
                 vm.NormalizeDecimal();
             }
+        }
+
+        private void ExitMenu_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
         }
     }
 }

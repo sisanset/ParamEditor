@@ -34,5 +34,17 @@ namespace ParamEditor.Properties {
                 this["LastTheme"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("data.json")]
+        public string LastParamFilePath {
+            get {
+                return ((string)(this["LastParamFilePath"]));
+            }
+            set {
+                this["LastParamFilePath"] = value;
+            }
+        }
     }
 }

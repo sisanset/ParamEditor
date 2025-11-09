@@ -5,5 +5,8 @@
     <Setting Name="LastTheme" Type="System.String" Scope="User">
       <Value Profile="(Default)">Light</Value>
     </Setting>
+    <Setting Name="LastParamFilePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">data.json</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
