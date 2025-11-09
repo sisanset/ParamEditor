@@ -9,9 +9,114 @@ using YamlDotNet.Serialization.NamingConventions;
 using System.Diagnostics;
 using ParamEditor.ViewModels;
 using System.Printing.IndexedProperties;
+using System.Text.Json;
+using Microsoft.Win32;
 
 namespace ParamEditor.Models
 {
+
+    public static class ConfigFileHandler
+    {
+        public static Dictionary<object, object> Load(string path)
+        {
+            if (!File.Exists(path))
+                return new Dictionary<object, object>();
+            var text = File.ReadAllText(path);
+            var ext = Path.GetExtension(path).ToLower();
+            if (ext == ".json")
+            {
+                var jsonDict = JsonSerializer.Deserialize<Dictionary<string, object>>(text);
+                return ConvertJsonObject(jsonDict);
+            }
+            else if (ext == ".yaml" || ext == ".yml")
+            {
+                var deserializer = new DeserializerBuilder()
+                    .WithNamingConvention(CamelCaseNamingConvention.Instance)
+                    .Build();
+                return deserializer.Deserialize<Dictionary<object, object>>(text);
+            }
+            throw new NotSupportedException($"Unsupported file extension: {ext}");
+        }
+        public static void Save(Dictionary<string, object?> data, string filepath)
+        {
+            var ext = Path.GetExtension(filepath).ToLower();
+            if (ext == ".json")
+            {
+                var options = new JsonSerializerOptions
+                {
+                    WriteIndented = true
+                };
+                var json = JsonSerializer.Serialize(data, options);
+                File.WriteAllText(filepath, json);
+            }
+            else if (ext == ".yaml" || ext == ".yml")
+            {
+                var serializer = new SerializerBuilder()
+                    .WithNamingConvention(CamelCaseNamingConvention.Instance)
+                    .Build();
+                var yaml = serializer.Serialize(data);
+                File.WriteAllText(filepath, yaml);
+            }
+            else
+            {
+                throw new NotSupportedException($"Unsupported file extension: {ext}");
+            }
+        }
+        private static Dictionary<object, object> ConvertJsonObject(Dictionary<string, object>? jsonDict)
+        {
+            var result = new Dictionary<object, object>();
+            if (jsonDict == null)
+                return result;
+            foreach (var kv in jsonDict)
+            {
+                if (kv.Value is JsonElement jsonElement)
+                {
+                    result[kv.Key] = ConvertJsonElement(jsonElement);
+                }
+                else
+                {
+                    result[kv.Key] = kv.Value!;
+                }
+            }
+            return result;
+        }
+        private static object ConvertJsonElement(JsonElement element)
+        {
+            switch (element.ValueKind)
+            {
+                case JsonValueKind.Object:
+                    var dict = new Dictionary<object, object>();
+                    foreach (var prop in element.EnumerateObject())
+                    {
+                        dict[prop.Name] = ConvertJsonElement(prop.Value);
+                    }
+                    return dict;
+                case JsonValueKind.Array:
+                    var list = new List<object>();
+                    foreach (var item in element.EnumerateArray())
+                    {
+                        list.Add(ConvertJsonElement(item));
+                    }
+                    return list;
+                case JsonValueKind.String:
+                    return element.GetString() ?? "";
+                case JsonValueKind.Number:
+                    if (element.TryGetInt64(out long l))
+                        return l;
+                    if (element.TryGetDouble(out double d))
+                        return element.GetDouble();
+                    return element.GetRawText();
+                case JsonValueKind.True:
+                    return true;
+                case JsonValueKind.False:
+                    return false;
+                case JsonValueKind.Null:
+                    return null!;
+                default:
+                    return element.GetRawText();
+            }
+        }
+    }
     internal class ParameterValueLoader
     {
         public static Dictionary<string, string?> LoadValues(string path)
@@ -30,15 +135,7 @@ namespace ParamEditor.Models
         }
         public static Dictionary<string, string?> LoadParameters(string path, SchemaRoot schema)
         {
-            var yaml = new Dictionary<object, object>();
-            if (!File.Exists(path))
-                return new Dictionary<string, string?>();
-            var deserializer = new DeserializerBuilder()
-                .WithNamingConvention(CamelCaseNamingConvention.Instance)
-                .Build();
-            using var reader = new StreamReader(path);
-
-            var node = deserializer.Deserialize<Dictionary<object, object>>(reader);
+            var node = ConfigFileHandler.Load(path);
             var dict = new Dictionary<string, string?>();
             foreach (var paramDef in schema.Parameters)
             {
@@ -54,12 +151,7 @@ namespace ParamEditor.Models
             foreach (var part in parts)
             {
                 if (current is Dictionary<object, object> dict && dict.TryGetValue(part, out var next))
-                //if (current is Dictionary<object, object> dict)
                 {
-                    //dict.Keys.ToList().ForEach(k => Debug.WriteLine($"Key: {k}"));
-                    //Debug.WriteLine($"Looking for part: {part}");
-                    //var b = dict.TryGetValue(part, out var next);
-                    //Debug.WriteLine(b);
                     current = next;
                 }
                 else
@@ -76,11 +168,7 @@ namespace ParamEditor.Models
             {
                 SetNestedValue(dict, param.Key, param.Value);
             }
-            var serializer = new SerializerBuilder()
-                .WithNamingConvention(CamelCaseNamingConvention.Instance)
-                .Build();
-            var yaml = serializer.Serialize(dict);
-            File.WriteAllText(paramPath, yaml);
+            ConfigFileHandler.Save(dict, paramPath);
         }
         public static void SetNestedValue(Dictionary<string, object?> node, string path, string? value)
         {

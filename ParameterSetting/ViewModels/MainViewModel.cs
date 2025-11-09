@@ -13,7 +13,7 @@ namespace ParamEditor.ViewModels
         public ObservableCollection<ParameterGroupViewModel> Groups { get; } = new();
         public ICommand SaveCommand { get; }
         private readonly string schemaPath = "schema.yaml";
-        private readonly string dataPath = "data.yaml";
+        private readonly string dataPath = "data.json";
 
 
         public MainViewModel()

@@ -29,3 +29,8 @@
     group: "Network"
     type: "ip"
     description: "接続先デバイスのIPアドレス"
+
+  - name: "MQTT/IPAddress"
+    group: "Network"
+    type: "ip"
+    description: "接続先デバイスのIPアドレス"
