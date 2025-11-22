@@ -11,6 +11,9 @@ namespace ParamEditor.Models
         public List<string>? Values { get; set; }
         public string? Unit { get; set; }
         public int? Decimalplaces { get; set; }
+        public string Relation { get; set; } = "";
+        public int Order { get; set; } = 0;
+
     }
 
     public class SchemaRoot

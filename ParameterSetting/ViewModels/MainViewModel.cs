@@ -114,6 +114,20 @@ namespace ParamEditor.ViewModels
                 }
                 Groups.Add(groupVM);
             }
+            foreach (var group in Groups)
+            {
+                foreach (var param in group.Parameters)
+                {
+                    if (string.IsNullOrEmpty(param.Relation)) { continue; }
+                    var relatedParam = Groups
+                        .SelectMany(g => g.Parameters)
+                        .Where(p => p.Relation == param.Relation);
+                    foreach (var p in relatedParam)
+                    {
+                        param.AddRelation(p);
+                    }
+                }
+            }
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

@@ -6,13 +6,33 @@
     unit: "m/s"
     description: "最大速度"
     decimalplaces: 2
+    relation: "speed"
+    order: 1
+
+  - name: "MiddleSpeed"
+    group: "Motion"
+    type: "float"
+    range: [0.0, 5.0]
+    unit: "m/s"
+    description: "中速度"
+    relation: "speed"
+    order: 2
 
   - name: "MinSpeed"
+    group: "Motion"
+    type: "float"
+    range: [0.0, 5.0]
+    unit: "m/s"
+    description: "最小速度"
+    relation: "speed"
+    order: 3
+
+  - name: "IntNum"
     group: "Motion"
     type: "int"
     range: [0, 5]
     unit: "m/s"
-    description: "最大速度"
+    description: "整数"
 
   - name: "OperationMode"
     group: "Motion"

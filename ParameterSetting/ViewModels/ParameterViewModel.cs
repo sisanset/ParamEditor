@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using System.Windows.Controls;
 
 namespace ParamEditor.ViewModels
 {
@@ -15,7 +16,10 @@ namespace ParamEditor.ViewModels
         public string Description => Definition.Description;
         public string View => $"{Name}({Description})";
         public string? Unit => Definition.Unit;
+        public string Relation => Definition.Relation;
         public int? DecimalPlaces => Definition.Decimalplaces;
+        private List<ParameterViewModel> relations = new();
+        public void AddRelation(ParameterViewModel param) => relations.Add(param);
         public string? Value
         {
             get => _value;
@@ -71,7 +75,29 @@ namespace ParamEditor.ViewModels
             OnPropertyChanged(nameof(Value));
             OnPropertyChanged(nameof(IsValid));
         }
+        bool CheckRelationsOrder<T>(T t) where T : struct, IParsable<T>, IComparable<T>
+        {
+            foreach (var rel in relations)
+            {
+                if (rel == this) { continue; }
+                if (!T.TryParse(rel.Value, null, out T rt))
+                { continue; }
+                var order = Definition.Order;
+                var r = t.CompareTo(rt);
 
+                if (order < rel.Definition.Order && r <= 0)
+                {
+                    IsValid = false;
+                    return false;
+                }
+                else if (rel.Definition.Order < order && 0 <= r)
+                {
+                    IsValid = false;
+                    return false;
+                }
+            }
+            return true;
+        }
         private void Validate()
         {
             if (string.IsNullOrWhiteSpace(Value))
@@ -87,12 +113,14 @@ namespace ParamEditor.ViewModels
                     { IsValid = false; return; }
                     if (Definition.Range != null && (i < Definition.Range[0] || i > Definition.Range[1]))
                     { IsValid = false; return; }
+                    if (!CheckRelationsOrder<int>(i)) { return; }
                     break;
                 case "float":
                     if (!double.TryParse(Value, out double v))
                     { IsValid = false; return; }
                     if (Definition.Range != null && (v < Definition.Range[0] || v > Definition.Range[1]))
                     { IsValid = false; return; }
+                    if (!CheckRelationsOrder<double>(v)) { return; }
                     break;
                 case "bool":
                     if (Value.ToLower() != "true" && Value.ToLower() != "false")
